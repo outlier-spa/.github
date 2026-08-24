@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Soporte y seguridad
+    url: https://github.com/outlier-spa/.github/blob/main/SUPPORT.md
+    about: Revisa las instrucciones de soporte y seguridad antes de abrir un issue fuera de las plantillas.
