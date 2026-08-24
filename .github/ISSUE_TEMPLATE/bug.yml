@@ -1,0 +1,98 @@
+name: Bug report
+description: Reportar un error o comportamiento inesperado.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Usa esta plantilla para registrar errores reproducibles, problemas visuales, fallas de datos, errores de integracion o comportamientos inesperados.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Resumen
+      description: Describe el problema en una o dos frases.
+      placeholder: Ejemplo: Al crear un evento en calendario, la fecha queda desplazada.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Resultado esperado
+      description: Que deberia ocurrir.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Resultado actual
+      description: Que ocurre realmente.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Pasos para reproducir
+      description: Lista los pasos en orden.
+      placeholder: |
+        1. Ir a ...
+        2. Hacer clic en ...
+        3. Guardar ...
+        4. Ver error ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Prioridad
+      options:
+        - p0-critical
+        - p1-high
+        - p2-medium
+        - p3-low
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area afectada
+      multiple: true
+      options:
+        - frontend
+        - backend
+        - database
+        - collector
+        - mobile
+        - infra
+        - design
+        - docs
+        - 3d
+        - qa
+        - security
+        - ai
+        - other
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Ambiente
+      placeholder: dev, test, prod, local, cliente, otro
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidencia
+      description: Agrega capturas, logs o enlaces. No incluyas secretos.
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impacto
+      description: A quien afecta y que operacion bloquea o degrada.
