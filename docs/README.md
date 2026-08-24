@@ -5,8 +5,12 @@ Esta carpeta contiene los estandares operativos de GitHub para Outlier.
 ## Guias disponibles
 
 - [Labels](labels.md)
+- [Topics](topics.md)
 - [Nombres de repositorios](repository-naming.md)
+- [Clasificacion de repositorios](repository-classification.md)
 - [Ciclo de vida de repositorios](repository-lifecycle.md)
+- [Checklist minimo de repositorios](repository-checklist.md)
+- [README de repositorios](repository-readme.md)
 - [Flujo de backlog](backlog-workflow.md)
 - [Ramas y pull requests](branching.md)
 - [Equipos y permisos](teams-permissions.md)
