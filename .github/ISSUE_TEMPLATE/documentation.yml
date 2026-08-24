@@ -1,0 +1,22 @@
+name: Documentacion
+description: Crear o mejorar documentacion.
+title: "[Docs] "
+labels: ["type: docs", "status: triage"]
+body:
+  - type: textarea
+    id: target
+    attributes:
+      label: Documento o seccion afectada
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: Cambio solicitado
+    validations:
+      required: true
+  - type: textarea
+    id: audience
+    attributes:
+      label: Audiencia
+      description: Quien usara esta documentacion.
