@@ -1,0 +1,61 @@
+name: Feature request
+description: Solicitar una nueva funcionalidad o mejora visible.
+title: "[Feature] "
+labels: ["type: feature", "status: triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe primero el problema o necesidad antes de proponer la solucion.
+  - type: input
+    id: context
+    attributes:
+      label: Contexto
+      description: Producto, modulo, cliente o repositorio relacionado.
+      placeholder: Ej. IMP / reportes / dashboard semanal
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema o necesidad
+      description: Que necesidad se quiere resolver.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Propuesta
+      description: Describe la solucion esperada.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Criterios de aceptacion
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area principal
+      options:
+        - frontend
+        - backend
+        - database
+        - collector
+        - mobile
+        - infra
+        - design
+        - docs
+        - ai
+        - other
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notas adicionales
