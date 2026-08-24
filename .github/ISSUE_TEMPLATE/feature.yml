@@ -1,0 +1,82 @@
+name: Nueva funcionalidad
+description: Solicitar una nueva capacidad o mejora funcional.
+title: "[Feature] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Usa esta plantilla para funcionalidades nuevas. Describe el problema de negocio antes de proponer la solucion.
+  - type: input
+    id: context
+    attributes:
+      label: Contexto
+      description: Producto, modulo, cliente o repositorio relacionado.
+      placeholder: Ej. IMP / reportes / dashboard semanal
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema o necesidad
+      description: Que necesidad se quiere resolver.
+      placeholder: Actualmente los usuarios no pueden...
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Propuesta
+      description: Describe la solucion esperada.
+      placeholder: Se requiere agregar...
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Criterios de aceptacion
+      description: Lista de condiciones para considerar cerrada la funcionalidad.
+      placeholder: |
+        - [ ] Permite ...
+        - [ ] Valida ...
+        - [ ] Muestra ...
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Prioridad sugerida
+      options:
+        - priority: p0-critical
+        - priority: p1-high
+        - priority: p2-medium
+        - priority: p3-low
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area principal
+      options:
+        - area: frontend
+        - area: backend
+        - area: database
+        - area: collector
+        - area: mobile
+        - area: infra
+        - area: design
+        - area: qa
+        - area: security
+        - area: ai
+        - area: docs
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencias o restricciones
+      placeholder: Datos, accesos, aprobaciones, diseno, decisiones pendientes.
+  - type: textarea
+    id: references
+    attributes:
+      label: Referencias
+      placeholder: Links a Figma, documentacion, issues relacionados o capturas.
