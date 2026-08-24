@@ -1,0 +1,36 @@
+name: Incidente
+description: Registrar un incidente operacional o de plataforma.
+title: "[Incident] "
+labels: ["type: incident", "priority: p1-high", "status: triage"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Resumen del incidente
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impacto
+      description: Usuarios, sistemas o procesos afectados.
+    validations:
+      required: true
+  - type: textarea
+    id: timeline
+    attributes:
+      label: Linea de tiempo
+      placeholder: |
+        - Hora: evento
+        - Hora: accion
+  - type: textarea
+    id: mitigation
+    attributes:
+      label: Mitigacion o workaround
+  - type: textarea
+    id: followup
+    attributes:
+      label: Acciones posteriores
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
