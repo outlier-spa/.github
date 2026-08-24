@@ -1,0 +1,79 @@
+name: Technical debt
+description: Registrar deuda tecnica, refactor, limpieza o consolidacion.
+title: "[Debt] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Usa esta plantilla para deuda tecnica que no necesariamente rompe el sistema hoy, pero aumenta riesgo, costo o complejidad futura.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Descripcion
+      description: Que deuda tecnica existe y donde se encuentra.
+    validations:
+      required: true
+
+  - type: textarea
+    id: risk
+    attributes:
+      label: Riesgo actual
+      description: Que problema puede generar si no se corrige.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Impacto
+      options:
+        - alto
+        - medio
+        - bajo
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area afectada
+      multiple: true
+      options:
+        - frontend
+        - backend
+        - database
+        - collector
+        - mobile
+        - infra
+        - design-system
+        - docs
+        - tests
+        - security
+        - other
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Propuesta de mejora
+      description: Como se podria resolver.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Criterios de aceptacion
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notas, referencias o dependencias
