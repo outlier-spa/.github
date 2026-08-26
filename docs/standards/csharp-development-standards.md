@@ -1,118 +1,123 @@
 # C# Development Standards
 
-**Version:** 1.0  
-**Status:** Baseline proposal  
-**Scope:** Outlier .NET libraries, APIs, services, collectors, applications, and tests.
+**Versión:** 1.0  
+**Estado:** Propuesta base  
+**Alcance:** librerías, APIs, servicios, collectors, aplicaciones y pruebas .NET de Outlier.
 
-## 1. Purpose
+## 1. Propósito
 
-This document establishes common practices that make Outlier code easier to read, maintain, test, and publish. It was prepared from a review of `outlier-spa/dataset`, a .NET 8 library published as `Outlier.DataSet`, which includes domain types, extensions, JSON and Excel support, domain exceptions, and automated tests.
+Este documento define reglas comunes para que el código de Outlier sea fácil de leer, mantener, probar y publicar. Se construyó revisando `outlier-spa/dataset`, una librería .NET 8 publicada como `Outlier.DataSet`, que contiene un núcleo de dominio, extensiones, conversores JSON/Excel, excepciones específicas y pruebas.
 
-Rules marked as **required** apply to new code and substantially changed files. Existing code does not need to be rewritten merely to comply; improvements are made incrementally.
+El estándar separa reglas **obligatorias** de recomendaciones. Las reglas obligatorias aplican a código nuevo y a archivos modificados de manera relevante; no obligan a refactorizar masivamente código existente.
 
-## 2. Principles
+## 2. Principios
 
-1. **Clarity over cleverness.** Explicit names are preferable to obscure abbreviations.
-2. **One responsibility per type.** Each class, method, and project has a distinguishable purpose.
-3. **Dependencies point toward the core.** Domain code does not depend on Excel, JSON, databases, UI, or infrastructure.
-4. **Public APIs are contracts.** Breaking changes require an explicit versioning and migration decision.
-5. **Validate at boundaries.** External input is validated as it enters the system.
-6. **Tests protect behaviour.** Every fixed defect and business rule is covered by an automated test.
+1. **Claridad antes que brevedad.** Un nombre explícito vale más que una abreviación poco evidente.
+2. **Una responsabilidad por tipo.** Cada clase, método y proyecto debe tener un propósito distinguible.
+3. **Las dependencias van hacia el núcleo.** El dominio no depende de Excel, JSON, base de datos, UI ni infraestructura.
+4. **Las APIs públicas son contratos.** Los cambios incompatibles requieren una decisión consciente de versión y migración.
+5. **Validar en los límites.** Entradas externas se validan al entrar; el núcleo no propaga estados inválidos.
+6. **Pruebas junto al comportamiento.** Todo bug corregido y toda regla de negocio nueva debe quedar cubierta por una prueba.
 
-## 3. Repository and Solution Structure
+## 3. Estructura de repositorio y solución
 
-The baseline layout for a .NET repository is:
+Los repositorios .NET siguen esta forma base:
 
 ```text
-<repository>/
+<repositorio>/
 ├── README.md
 ├── .editorconfig
 ├── Directory.Build.props
-├── Directory.Packages.props          # when package versions are centralized
+├── Directory.Packages.props          # si se centralizan versiones
 ├── .github/workflows/
 ├── docs/
-├── samples/                          # optional
+├── samples/                          # opcional
+├── tests/                            # opcional si no se usa src/*Tests
 └── src/
-    ├── Outlier.<Product>/
-    └── Outlier.<Product>.Tests/
+    ├── Outlier.<Producto>/
+    └── Outlier.<Producto>.Tests/
 ```
 
-- Production projects live under `src/`.
-- Test projects are named `Outlier.<Product>.Tests`; do not use the singular `UnitTest`.
-- Test fixtures and files are stored under the test project, for example `TestData/`.
-- `docs/` contains architectural decisions and technical documentation. `README.md` explains installation, a quick start, and compatibility.
-- Do not commit `bin/`, `obj/`, test results, secrets, or local IDE files.
+- Los proyectos productivos viven en `src/`.
+- Las pruebas se nombran `Outlier.<Producto>.Tests`; no `UnitTest` en singular.
+- Los archivos de prueba y datos de prueba viven bajo el proyecto de pruebas, por ejemplo `TestData/`.
+- `docs/` contiene decisiones técnicas y documentación de arquitectura; el `README.md` explica instalación, uso rápido y compatibilidad.
+- No se versionan `bin/`, `obj/`, resultados de pruebas, secretos ni archivos locales de IDE.
 
-### 3.1 Projects and Dependencies
+### 3.1 Proyectos y dependencias
 
-- Assembly and NuGet package names use `Outlier.<Product>` in PascalCase, for example `Outlier.DataSet`.
-- A domain or `Core` project must not reference serialization, files, API, UI, or infrastructure projects.
-- Use `Outlier.<Product>.Serialization` when JSON/XML serialization has external dependencies or is a separable responsibility.
-- Split optional integrations such as Excel, SQL, and Azure when they materially increase dependencies or package size.
-- Published packages declare `PackageId`, `Authors`, `Company`, `RepositoryUrl`, license, version, `TargetFramework`, and SourceLink/symbols where applicable.
+- El nombre de ensamblado y paquete NuGet usa `Outlier.<Producto>` en PascalCase: por ejemplo, `Outlier.DataSet`.
+- Un proyecto de dominio o `Core` no referencia proyectos de serialización, archivos, API o infraestructura.
+- La serialización va en `Outlier.<Producto>.Serialization` cuando depende de paquetes externos o cuando el contrato JSON/XML forma parte de una responsabilidad separable.
+- Los paquetes de integración opcional, como Excel, SQL o Azure, se separan cuando aumentan materialmente las dependencias o el tamaño del paquete principal.
+- Todo paquete publicado debe declarar: `PackageId`, `Authors`, `Company`, `RepositoryUrl`, licencia, versión, `TargetFramework` y generación de símbolos/SourceLink cuando corresponda.
 
-## 4. Files, Namespaces, and Types
+## 4. Convenciones de archivos, namespaces y tipos
 
-### 4.1 One Type per File — Required
+### 4.1 Regla de un tipo por archivo
 
-- Each public class, interface, record, enum, and exception has its own file.
-- The file name matches the type name: `Column.cs`, `DataConverter.cs`, `ColumnNotFoundException.cs`.
-- A small, strictly local private type is the only exception.
-- Extension classes are named for the capability, for example `ColumnExtensions.cs` or `ColumnValidationExtensions.cs`.
+- Cada clase, interfaz, record, enum o excepción pública vive en su propio archivo.
+- El archivo se llama igual que el tipo: `Column.cs`, `DataConverter.cs`, `ColumnNotFoundException.cs`.
+- Una excepción permitida es un tipo privado, pequeño y estrictamente local. No se usa para agrupar clases de producción sin relación.
+- Las extensiones de un mismo concepto pueden agruparse como `ColumnExtensions.cs` o dividirse por responsabilidad: `ColumnValidationExtensions.cs`.
 
-### 4.2 Partial Classes
+### 4.2 Clases parciales
 
-- Use `partial` only when the class is split into stable responsibilities, for example `Column.cs` and `Column.Validation.cs`.
-- Use a complete responsibility name; avoid abbreviated suffixes such as `Column.Check.cs`.
-- Partial files must not duplicate initialization logic, fields, or unnecessary imports.
+- `partial` se usa solo cuando una clase se divide por responsabilidades estables, por ejemplo `Column.cs` y `Column.Validation.cs`.
+- Se prefiere el sufijo descriptivo completo; no `Column.Check.cs`.
+- Cada archivo parcial conserva una responsabilidad clara y no duplica `using`, campos o lógica de inicialización innecesariamente.
 
 ### 4.3 Namespaces
 
-- The namespace mirrors the folder structure: `Outlier.DataSet.Serialization.Json` for `Serialization/Json/DataConverter.cs`.
-- Use file-scoped namespaces.
+- El namespace replica la carpeta desde el proyecto: `Outlier.DataSet.Serialization.Json` para `Serialization/Json/DataConverter.cs`.
+- Se usa file-scoped namespace:
 
 ```csharp
 namespace Outlier.DataSet;
 ```
 
-- Do not use `Common` or `Utils` as a generic destination. Name types for what they do: `ValueConverter`, `ColumnValidator`, or `CsvFormatter`.
+- No se usa `Common` ni `Utils` como destino genérico. Un tipo se nombra por su responsabilidad: `ValueConverter`, `ColumnValidator`, `TypeConverter` o `CsvFormatter`.
 
-## 5. Naming
+## 5. Nombres
 
-| Element | Convention | Example |
+| Elemento | Convención | Ejemplo |
 | --- | --- | --- |
-| Namespace, type, method, property, event | PascalCase | `Definition`, `GetColumn` |
-| Parameter and local variable | camelCase | `columnName`, `parsedValue` |
-| Private readonly field | `_camelCase` | `_values`, `_definition` |
-| Constant | PascalCase | `DefaultDateFormat` |
-| Interface | `I` prefix | `IDataSerializer` |
-| Asynchronous method | `Async` suffix | `ReadAsync` |
-| Test | `Method_Scenario_ExpectedResult` | `GetColumn_WhenMissing_ThrowsColumnNotFoundException` |
-| Boolean | question or state | `HasDefault`, `isValid`, `canSerialize` |
+| Namespace, tipo, método, propiedad, evento | PascalCase | `Definition`, `GetColumn` |
+| Parámetro y variable local | camelCase | `columnName`, `parsedValue` |
+| Campo privado readonly | `_camelCase` | `_values`, `_definition` |
+| Constante | PascalCase | `DefaultDateFormat` |
+| Interfaz | prefijo `I` | `IDataSerializer` |
+| Método asíncrono | sufijo `Async` | `ReadAsync` |
+| Prueba | `Método_Escenario_Resultado` | `GetColumn_WhenMissing_ThrowsColumnNotFoundException` |
+| Booleano | pregunta o estado | `HasDefault`, `isValid`, `canSerialize` |
 
-- Use abbreviations only when universally understood (`Id`, `Json`, `Csv`, `Url`).
-- Avoid vague names such as `Helper`, `Manager`, `Utils`, `Data2`, `Process`, or `Handle` without a meaningful qualifier.
-- Collection names are plural: `columns`, `definitions`, `values`.
-- Custom exception names end in `Exception` and state the problem.
+Reglas adicionales:
 
-## 6. Code Style
+- No se usan abreviaciones salvo que sean universalmente conocidas (`Id`, `Json`, `Csv`, `Url`).
+- No se usan nombres vagos como `Helper`, `Manager`, `Utils`, `Data2`, `Process` o `Handle` sin un complemento que describa qué hacen.
+- Los nombres de colecciones son plurales: `columns`, `definitions`, `values`.
+- Los nombres de excepciones describen el problema y terminan en `Exception`.
 
-- Use 4 spaces; do not use tabs.
-- Put braces on their own line.
-- Leave one blank line between logically distinct members.
-- Recommended maximum line length: 160 characters.
-- Use `var` only when the assigned expression makes the type clear; otherwise use an explicit type.
-- Prefer clear code over LINQ chains that are difficult to debug.
-- Order `using` directives as `System.*`, external packages, and `Outlier.*`; remove unused directives.
-- Do not leave debug comments, commented-out code, or markers such as `//ho`. Git preserves history. Use a tracked issue for pending work, optionally as `TODO(<issue>):`.
+## 6. Estilo de código
 
-### 6.1 Methods
+### 6.1 Formato
 
-- A method does one thing and its name describes its result.
-- Prefer early returns to reduce nesting.
-- Recommended maximum method length: 40 lines. Extract named domain steps when a method grows beyond that.
-- Avoid boolean parameters that drastically change behaviour. Prefer an overload, enum, or options type.
-- Public methods validate arguments with `ArgumentNullException.ThrowIfNull(...)` or an appropriate domain exception.
+- Indentación de 4 espacios; sin tabs.
+- Llaves siempre en línea propia.
+- Una línea en blanco entre miembros lógicamente distintos.
+- Máximo recomendado: 160 caracteres por línea.
+- Se usan `var` cuando el tipo es evidente por la expresión del lado derecho; de otro modo se declara el tipo explícito.
+- Se prefiere una expresión clara antes que LINQ encadenado difícil de depurar.
+- `using` se ordenan: `System.*`, paquetes externos, `Outlier.*`; se eliminan los no usados.
+- No se dejan comentarios de depuración, código comentado ni marcadores como `//ho`. El historial vive en Git; una tarea pendiente vive en un issue con `TODO(<issue>):` temporal.
+
+### 6.2 Métodos
+
+- Un método debe hacer una sola cosa y tener un nombre que explique el resultado.
+- Se prefiere retornar temprano para disminuir anidación.
+- Máximo recomendado: 40 líneas por método. Si supera ese tamaño, se extraen pasos con nombres de dominio.
+- Evitar parámetros `bool` que cambian radicalmente el comportamiento. Preferir una sobrecarga, enum u objeto de opciones.
+- Métodos públicos validan argumentos y lanzan `ArgumentNullException.ThrowIfNull(...)` o una excepción de dominio apropiada.
 
 ```csharp
 public Column GetColumn(string name)
@@ -125,20 +130,20 @@ public Column GetColumn(string name)
 }
 ```
 
-## 7. Domain Design and Encapsulation
+## 7. Diseño de dominio y encapsulación
 
-- Mutable fields are private. Do not expose mutable `List<T>` or `Dictionary<TKey, TValue>` values through a public API.
-- Expose `IReadOnlyCollection<T>`, `IReadOnlyList<T>`, or `IReadOnlyDictionary<TKey, TValue>` when consumers only need to read.
-- Types maintain their own invariants and should not expose a way to become invalid.
-- Use `record` or `record struct` for immutable value objects with value equality. Use `class` for entities with identity or controlled mutable state.
-- Constructors leave instances valid. Public properties do not bypass validation.
-- Avoid `dynamic` and `object` in public APIs. If they are unavoidable in a data library, isolate them in the core and provide typed methods such as `Get<T>` and `Set<T>`.
+- Los campos mutables son privados. No se exponen colecciones mutables como `Dictionary` o `List` desde una API pública.
+- Se expone `IReadOnlyCollection<T>`, `IReadOnlyList<T>` o `IReadOnlyDictionary<TKey, TValue>` cuando el consumidor solo debe leer.
+- Las invariantes se preservan dentro del tipo: una entidad o value object no entrega una forma de quedar inválido.
+- Se usan `record` o `record struct` para valores inmutables con igualdad por valor; `class` para entidades con identidad o estado mutable controlado.
+- Los constructores dejan el objeto en un estado válido. Las propiedades públicas no deben permitir romper invariantes sin validación.
+- Evitar `dynamic` y `object` en APIs públicas. Cuando sean inevitables por una librería de datos como `DataSet`, aislarlos dentro del núcleo y ofrecer métodos tipados como `Get<T>` y `Set<T>`.
 
-For `Outlier.DataSet`, `Data.Values` should evolve toward a read-only view; mutations should go through an indexer or `SetValue`, where conversion and validation are enforced.
+Para `Outlier.DataSet`, `Data.Values` debería evolucionar hacia una vista de solo lectura y la modificación debe pasar por el indexador o `SetValue`, donde se aplica conversión y validación.
 
-## 8. Nullability and Types — Required
+## 8. Nullability y tipos
 
-New projects enable nullable reference types:
+- Todo proyecto nuevo habilita nullable reference types:
 
 ```xml
 <Nullable>enable</Nullable>
@@ -146,59 +151,59 @@ New projects enable nullable reference types:
 <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 ```
 
-- Members that may have no value are explicitly nullable: `string? Description`.
-- Do not assign `null` to non-nullable types such as `string` or `object`.
-- Do not use `!` to suppress warnings without a verifiable guarantee.
-- Choose types based on meaning: `DateOnly`, `TimeOnly`, `DateTimeOffset`, and `decimal` as appropriate. Use `DateTimeOffset` for absolute instants or cross-time-zone data.
-- Explicitly declare culture when serializing, comparing, or converting persisted values. Use `CultureInfo.InvariantCulture` for machine formats.
+- Un miembro que puede no tener valor se declara explícitamente nullable: `string? Description`.
+- No se asigna `null` a tipos no-nullables como `string` u `object`.
+- No se usa el operador `!` para silenciar advertencias sin una garantía verificable.
+- Preferir `DateOnly`, `TimeOnly`, `DateTimeOffset` y `decimal` según el significado del dato. Para instantes absolutos o datos entre zonas horarias, usar `DateTimeOffset`.
+- La cultura se declara explícitamente al serializar, comparar o convertir valores persistidos. Para formatos de máquina se usa `CultureInfo.InvariantCulture`.
 
-## 9. Errors, Validation, and Logging
+## 9. Errores, validación y logging
 
-- Exceptions represent exceptional conditions, not normal control flow.
-- Throw domain exceptions when they improve understanding, for example `ColumnNotFoundException` or `InvalidDefinitionException`.
-- Custom exceptions include an actionable message and preserve an inner exception where relevant.
-- Never catch `Exception` merely to hide it. Rethrow with `throw;` or wrap it while preserving the inner exception.
-- Do not use `InvalidProgramException` for invalid data or business rules. Use `InvalidOperationException`, `ArgumentException`, or a domain-specific exception.
-- Libraries do not write directly to the console. Use `ILogger<T>` when diagnostic logging is necessary, or return an explicit result for expected failures.
+- Las excepciones representan situaciones excepcionales, no flujo normal.
+- Cada capa lanza excepciones de su dominio cuando mejora la comprensión: `ColumnNotFoundException`, `InvalidDefinitionException`.
+- Las excepciones personalizadas incluyen un mensaje accionable y preservan la excepción interna cuando existe.
+- Nunca se captura `Exception` para ocultarlo. Si se agrega contexto, se relanza con `throw;` o se encapsula preservando `innerException`.
+- No se lanza `InvalidProgramException` para errores de datos o reglas de negocio; se usa `InvalidOperationException`, `ArgumentException` o una excepción específica.
+- Las librerías no escriben directamente a consola. Reciben `ILogger<T>` cuando deben emitir diagnósticos, o devuelven resultados explícitos cuando el error es esperable.
 
-## 10. Collections, LINQ, and Performance
+## 10. Colecciones, LINQ y rendimiento
 
-- Choose collections by access pattern: `List<T>` for ordered/indexed access, `Dictionary<TKey, TValue>` for key lookup, and `HashSet<T>` for membership.
-- Declare string key comparers explicitly. For technical identifiers, prefer `StringComparer.OrdinalIgnoreCase` to culture-dependent comparison.
-- Do not enumerate an `IEnumerable<T>` more than once if it may be a query or stream. Materialize it once when needed.
-- Do not use `ToList()` only to call `ForEach`; use `foreach`.
-- Do not call `Count()` merely to check whether a sequence has items; use `Any()`.
-- Avoid repeated reflection, unnecessary serialization, and intermediate allocations in frequently executed code.
+- Elegir la colección por el acceso: `List<T>` para orden e índice, `Dictionary<TKey,TValue>` para búsqueda por clave, `HashSet<T>` para pertenencia.
+- Definir el comparador de claves de forma explícita. Para identificadores técnicos, preferir `StringComparer.OrdinalIgnoreCase` antes que comparadores dependientes de cultura.
+- No enumerar un `IEnumerable<T>` más de una vez si puede venir de una consulta o stream. Materializar una vez cuando sea necesario.
+- No usar `ToList()` solo para poder llamar a `ForEach`; usar `foreach`.
+- No usar `Count()` para comprobar si una secuencia tiene elementos; usar `Any()`.
+- En operaciones frecuentes, evitar reflexión repetitiva, serialización innecesaria y asignaciones intermedias.
 
-## 11. Extensions, Serialization, and Integrations
+## 11. Extensiones, serialización e integraciones
 
-- Group extension methods by capability: `Filtering`, `Aggregation`, `Serialization`, and `Importing`.
-- An extension does not silently mutate a received collection or object unless its name explicitly says so, for example `AddColumnInPlace`.
-- Keep JSON converters, Excel/CSV readers, and external adapters outside the domain core whenever possible.
-- Serialized contracts require round-trip tests: serialize → deserialize → compare values and behaviour.
-- Date formats, property names, and version compatibility are part of a public package contract.
+- Las extensiones se agrupan por capacidad: `Filtering`, `Aggregation`, `Serialization`, `Importing`.
+- Una extensión no modifica silenciosamente una colección o instancia recibida, salvo que el nombre lo indique claramente (`AddColumnInPlace`). Preferir devolver una nueva instancia cuando el costo sea razonable.
+- Los conversores JSON, lectores Excel/CSV y adaptadores externos viven fuera del núcleo del dominio cuando sea posible.
+- Los contratos serializados son explícitos y se cubren con pruebas de ida y vuelta: serializar → deserializar → comparar comportamiento/valor.
+- El formato de fecha, nombres de propiedades y compatibilidad de versiones se consideran parte del contrato público del paquete.
 
-## 12. Public APIs and NuGet
+## 12. APIs públicas y NuGet
 
-- Every `public` type and member is deliberate because it forms part of the package contract.
-- Changes that break compilation or expected behaviour require a major version increment or a deprecation path.
-- Mark deprecated APIs with `[Obsolete]`, include migration guidance, and define a target removal version.
-- Public libraries generate XML documentation (`GenerateDocumentationFile=true`) for commonly used exposed members.
-- Each published package has installation and usage examples in its README.
+- Todo tipo y miembro `public` se justifica porque forma parte del contrato del paquete.
+- Los cambios que rompen compilación o comportamiento esperado requieren incremento de versión mayor o una ruta de deprecación.
+- Las APIs obsoletas se marcan con `[Obsolete]`, mensaje de migración y fecha/versión objetivo de retiro.
+- Las bibliotecas públicas generan documentación XML (`GenerateDocumentationFile=true`) para los miembros expuestos de mayor uso.
+- Cada paquete publicado tiene ejemplos mínimos de instalación y uso en el README.
 
-## 13. Testing
+## 13. Pruebas
 
-- Test projects use xUnit and follow the `*.Tests` naming convention.
-- Each test verifies observable behaviour, not implementation details.
-- Group tests by type or capability: `ColumnTests`, `DataSerializationTests`, `ExcelImportTests`.
-- Fixtures are small, deterministic, and stored in `TestData/`.
-- Cover normal paths, nulls, boundaries, culture/formatting, expected errors, and regressions.
-- A corrected defect first receives a failing regression test, then the implementation is fixed.
-- Do not use `Program.cs` as a replacement for automated tests.
+- Los proyectos de prueba usan xUnit y se nombran `*.Tests`.
+- Cada prueba verifica un comportamiento observable, no detalles internos de implementación.
+- Las pruebas se organizan por tipo o capacidad: `ColumnTests`, `DataSerializationTests`, `ExcelImportTests`.
+- Los datos de prueba son pequeños, deterministas y viven en `TestData/`.
+- Se cubren explícitamente casos normales, nulos, límites, formato/cultura, errores esperados y regresiones.
+- El bug corregido primero se reproduce con una prueba que falla y luego se corrige.
+- No se usa un `Program.cs` como reemplazo de pruebas automatizadas.
 
-## 14. Required Baseline Configuration
+## 14. Configuración mínima obligatoria
 
-All new repositories include `.editorconfig` and `Directory.Build.props`. Baseline example:
+Todos los repositorios nuevos incorporan `.editorconfig` y `Directory.Build.props`. Ejemplo inicial:
 
 ```xml
 <!-- Directory.Build.props -->
@@ -215,7 +220,7 @@ All new repositories include `.editorconfig` and `Directory.Build.props`. Baseli
 </Project>
 ```
 
-Before integration, the solution passes:
+La solución debe pasar, antes de integrar cambios:
 
 ```bash
 dotnet restore
@@ -224,30 +229,30 @@ dotnet build --configuration Release
 dotnet test --configuration Release --no-build
 ```
 
-## 15. Pull Request Checklist
+## 15. Lista de revisión para pull requests
 
-- [ ] The change has one clear responsibility and understandable names.
-- [ ] It does not add unnecessary public types or break contracts without a version/migration decision.
-- [ ] Nullability is accurately declared.
-- [ ] Mutable collections are not exposed unnecessarily.
-- [ ] Inputs, boundary values, and errors are validated at the appropriate boundary.
-- [ ] The code has no unused imports, commented-out code, or debug comments.
-- [ ] Tests cover the affected behaviour.
-- [ ] Formatting, Release build, and tests pass.
-- [ ] Serialization changes consider compatibility, culture, and formatting.
-- [ ] README or documentation is updated when public APIs change.
+- [ ] El cambio tiene una responsabilidad clara y nombres comprensibles.
+- [ ] No incorpora tipos públicos innecesarios ni rompe contratos sin versión/migración.
+- [ ] La nulabilidad está declarada correctamente.
+- [ ] Las colecciones mutables no se exponen sin necesidad.
+- [ ] Entradas, valores límite y errores se validan en el borde correcto.
+- [ ] El código no contiene `using` sin usar, código comentado ni comentarios de depuración.
+- [ ] Se agregaron o ajustaron pruebas para el comportamiento afectado.
+- [ ] `dotnet format`, build y tests pasan en Release.
+- [ ] Si hay cambios de serialización, se revisó compatibilidad y cultura/formato.
+- [ ] README o documentación se actualizó cuando cambia la API pública.
 
-## 16. Incremental Adoption in `Outlier.DataSet`
+## 16. Aplicación gradual en `Outlier.DataSet`
 
-`Outlier.DataSet` already provides a solid base: projects under `src`, clear package naming, .NET 8, SourceLink, domain-specific exceptions, extensions grouped by capability, and substantial tests. The goal is not a full rewrite, but incremental improvement whenever code changes.
+El repositorio ya aporta una buena base: solución bajo `src`, paquete claramente nombrado, .NET 8, SourceLink, excepciones de dominio, extensiones por capacidad y una cobertura de pruebas considerable. La prioridad no es reescribirlo, sino elevar el estándar en cada cambio futuro.
 
-Recommended order:
+Orden recomendado:
 
-1. Add `.editorconfig`, `Directory.Build.props`, nullable reference types, and analyzers; resolve warnings incrementally.
-2. Rename `Outlier.DataSet.UnitTest` to `Outlier.DataSet.Tests` and move fixtures into `TestData/`.
-3. Remove unused imports, debug comments, and commented-out blocks.
-4. Move shared types into separate files and replace `Common/Utils.cs` with clearly scoped responsibilities.
-5. Reduce the mutable public surface (`Data.Values`) and isolate conversion/serialization from the domain core.
-6. Enable XML documentation and complete NuGet usage examples.
+1. Agregar `.editorconfig`, `Directory.Build.props`, nullable y analizadores; resolver advertencias de forma incremental.
+2. Renombrar `Outlier.DataSet.UnitTest` a `Outlier.DataSet.Tests` y ordenar sus datos en `TestData/`.
+3. Retirar `using` no usados, comentarios de depuración y bloques de código comentado.
+4. Separar tipos compartidos en archivos propios (`ColumnExtensions`, etc.) y renombrar `Common/Utils.cs` por responsabilidades concretas.
+5. Reducir la superficie mutable pública (`Data.Values`) y aislar conversiones/serialización del núcleo.
+6. Habilitar documentación XML y completar ejemplos de consumo NuGet.
 
-Implement these actions through small, compatible pull requests to keep `Outlier.DataSet` stable for its consumers.
+Estas acciones pueden hacerse en pull requests pequeños y compatibles, manteniendo estable el paquete `Outlier.DataSet` para sus consumidores.
