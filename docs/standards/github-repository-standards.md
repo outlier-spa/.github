@@ -40,6 +40,31 @@ Las reglas obligatorias aplican a repositorios nuevos y a cambios estructurales 
 
 Si un producto incluye varios repositorios, se conserva un prefijo común: `bhp-imp-api`, `bhp-imp-collector` y `bhp-imp-web`.
 
+### 3.3 Tipo de repositorio y sufijos opcionales
+
+Todo repositorio declara un tipo principal en su descripción de GitHub, topics y README. El tipo no es obligatorio en el nombre, pero puede incorporarse como sufijo o patrón cuando evita ambigüedad entre repositorios de un mismo producto o dominio.
+
+| Tipo | Propósito | Sufijo o patrón permitido | Ejemplo |
+| --- | --- | --- | --- |
+| `library` | Librería reutilizable, interna o publicada como NuGet. | `-library` solo si es necesario distinguirla. | `imp-client-library` |
+| `api` | Backend expuesto mediante HTTP. | `-api` | `imp-api` |
+| `service` | Worker o proceso backend sin API pública principal. | `-service` | `imp-notification-service` |
+| `collector` | Captura e ingesta datos desde fuentes externas. | `-collector` | `spence-collector` |
+| `web` | Aplicación frontend. | `-web` | `imp-web` |
+| `application` | Aplicación de escritorio o ejecutable para usuarios. | `-app` | `imp-app` |
+| `infrastructure` | Infraestructura, CI/CD o configuración de despliegue. | `-infra` | `imp-infra` |
+| `tool` | Herramienta interna de soporte o automatización. | `-tool` | `repository-tool` |
+| `template` | Base reutilizable para crear repositorios. | `template-<tecnología>` | `template-dotnet` |
+| `documentation` | Documentación o estándares organizacionales. | `docs-<dominio>` cuando aporte claridad. | `docs-platform` |
+
+Reglas:
+
+- No se agregan sufijos redundantes: `imp-backend-api` y `dataset-nuget-library` no son válidos.
+- Una librería compartida normalmente omite `-library`: `dataset` y `dateutils` son nombres correctos.
+- Si un producto tiene varias partes, el sufijo es recomendable: `imp-api`, `imp-web` e `imp-collector`.
+- `Model`, `Helper`, `Crafter`, `Deliver` y `Agent` son tipos de componentes o proyectos dentro de una solución; no se usan como sufijos de repositorio.
+- El tipo define requisitos adicionales de documentación y pipeline. Una `library` publica paquetes y verifica compatibilidad; una `api`, `service`, `collector`, `web` o `application` debe definir su despliegue y monitoreo.
+
 ## 4. Propiedad, visibilidad y ciclo de vida
 
 - Todo repositorio se crea dentro de `outlier-spa`, no en cuentas personales.
@@ -106,7 +131,8 @@ feature/* → dev → qa → main
 | `main` | Producción | Versión estable, aprobada y desplegable a producción. | `qa` |
 
 - `main` es la rama predeterminada de GitHub y representa la versión estable del repositorio.
-- Cada rama permanente despliega automáticamente a su ambiente equivalente: `dev` a Desarrollo, `qa` a QA y `main` a Producción.
+- En repositorios desplegables (`api`, `service`, `collector`, `web` y `application`), cada rama permanente despliega automáticamente a su ambiente equivalente: `dev` a Desarrollo, `qa` a QA y `main` a Producción.
+- En librerías (`library`), las ramas siguen el mismo flujo de validación, pero publican o validan paquetes en canales equivalentes en lugar de desplegar un ambiente de ejecución.
 - El trabajo se realiza en ramas cortas; patrón obligatorio: `<tipo>/<issue>-<descripcion>`.
 - Tipos de rama: `feature/`, `fix/`, `docs/`, `refactor/`, `chore/` y `hotfix/`.
 - Ejemplos: `feature/124-excel-import`, `fix/215-null-column`, `docs/31-update-readme`.
