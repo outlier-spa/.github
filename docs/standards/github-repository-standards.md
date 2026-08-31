@@ -121,33 +121,33 @@ Se usan entre 3 y 6 topics. No se agregan topics de clientes cuando ello revele 
 Todo repositorio activo mantiene estas ramas permanentes:
 
 ```text
-feature/* → dev → qa → main
+feature/* → dev → qa → prod
 ```
 
 | Rama | Ambiente | Propósito | Origen permitido para PR |
 | --- | --- | --- | --- |
 | `dev` | Desarrollo | Integración continua de funcionalidades y pruebas internas. | `feature/*`, `fix/*`, `docs/*`, `refactor/*`, `chore/*` |
 | `qa` | QA | Validación funcional, técnica y de aceptación. | `dev` |
-| `main` | Producción | Versión estable, aprobada y desplegable a producción. | `qa` |
+| `prod` | Producción | Versión estable, aprobada y desplegable a producción. | `qa` |
 
-- `main` es la rama predeterminada de GitHub y representa la versión estable del repositorio.
-- En repositorios desplegables (`api`, `service`, `collector`, `web` y `application`), cada rama permanente despliega automáticamente a su ambiente equivalente: `dev` a Desarrollo, `qa` a QA y `main` a Producción.
+- `dev` es la rama predeterminada de GitHub y el punto de integración inicial para el trabajo diario. `prod` representa la versión estable del repositorio.
+- En repositorios desplegables (`api`, `service`, `collector`, `web` y `application`), cada rama permanente despliega automáticamente a su ambiente equivalente: `dev` a Desarrollo, `qa` a QA y `prod` a Producción.
 - En librerías (`library`), las ramas siguen el mismo flujo de validación, pero publican o validan paquetes en canales equivalentes en lugar de desplegar un ambiente de ejecución.
 - El trabajo se realiza en ramas cortas; patrón obligatorio: `<tipo>/<issue>-<descripcion>`.
 - Tipos de rama: `feature/`, `fix/`, `docs/`, `refactor/`, `chore/` y `hotfix/`.
 - Ejemplos: `feature/124-excel-import`, `fix/215-null-column`, `docs/31-update-readme`.
 - Un pull request describe qué cambia, por qué, cómo se probó y qué impacto tiene para consumidores o despliegues.
-- Las ramas de trabajo se eliminan después de integrar el PR. Solo `dev`, `qa` y `main` permanecen de forma continua.
+- Las ramas de trabajo se eliminan después de integrar el PR. Solo `dev`, `qa` y `prod` permanecen de forma continua.
 
 ### 7.1 Hotfixes
 
-Un `hotfix/*` se crea desde `main` únicamente para corregir una incidencia crítica de producción. Se integra mediante PR a `main` y luego se propaga mediante PR hacia `qa` y `dev`, para evitar que los ambientes vuelvan a divergir.
+Un `hotfix/*` se crea desde `prod` únicamente para corregir una incidencia crítica de producción. Se integra mediante PR a `prod` y luego se propaga mediante PR hacia `qa` y `dev`, para evitar que los ambientes vuelvan a divergir.
 
 ### 7.2 Protección obligatoria de ramas
 
-Las ramas `dev`, `qa` y `main` se protegen mediante una regla de protección o ruleset de GitHub. En todos los casos se prohíben los pushes directos, force pushes y la eliminación de la rama.
+Las ramas `dev`, `qa` y `prod` se protegen mediante una regla de protección o ruleset de GitHub. En todos los casos se prohíben los pushes directos, force pushes y la eliminación de la rama.
 
-| Regla | `dev` | `qa` | `main` |
+| Regla | `dev` | `qa` | `prod` |
 | --- | --- | --- | --- |
 | Pull request obligatorio | Sí | Sí | Sí |
 | Aprobaciones mínimas | 1 | 1 | 1 |
@@ -163,7 +163,7 @@ La aprobación debe venir de una persona distinta de quien creó el último camb
 
 ### 7.3 Configuración en GitHub
 
-Para proteger una rama, un administrador del repositorio debe ir a **Settings → Branches → Add rule** —o crear un ruleset equivalente en **Settings → Rules**— e indicar el nombre exacto de la rama: `dev`, `qa` o `main`.
+Para proteger una rama, un administrador del repositorio debe ir a **Settings → Branches → Add rule** —o crear un ruleset equivalente en **Settings → Rules**— e indicar el nombre exacto de la rama: `dev`, `qa` o `prod`.
 
 Se habilitan estas opciones:
 
@@ -171,12 +171,12 @@ Se habilitan estas opciones:
 2. **Dismiss stale pull request approvals when new commits are pushed**.
 3. **Require approval of the most recent reviewable push**.
 4. **Require status checks to pass before merging** y seleccionar los checks del pipeline correspondiente.
-5. **Require branches to be up to date before merging** para `qa` y `main`.
+5. **Require branches to be up to date before merging** para `qa` y `prod`.
 6. **Require conversation resolution before merging**.
 7. **Do not allow bypassing the above settings**.
 8. Mantener deshabilitados **Allow force pushes** y **Allow deletions**.
 
-GitHub protege el destino del PR, pero no restringe por sí solo que el origen sea `dev` o `qa`. El pipeline debe validar ese flujo: permitir solo `dev → qa` y `qa → main`; cualquier otro origen debe fallar la validación.
+GitHub protege el destino del PR, pero no restringe por sí solo que el origen sea `dev` o `qa`. El pipeline debe validar ese flujo: permitir solo `dev → qa` y `qa → prod`; cualquier otro origen debe fallar la validación.
 
 ## 8. Issues
 
@@ -255,7 +255,7 @@ No se eliminan labels existentes sin revisar su uso histórico y acordar la migr
 - [ ] Existe una descripción y entre 3 y 6 topics pertinentes.
 - [ ] El README permite entender, instalar y probar el proyecto.
 - [ ] Se configuraron `.gitignore`, `.editorconfig` y CI cuando corresponda.
-- [ ] `main` está protegida y el flujo de PR está definido.
+- [ ] `dev`, `qa` y `prod` están protegidas, y `dev` está configurada como rama predeterminada.
 - [ ] Se creó el catálogo obligatorio de labels.
 - [ ] Hay más de una persona o equipo responsable del repositorio.
 - [ ] Los secretos y datos de clientes no están versionados.
