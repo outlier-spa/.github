@@ -118,7 +118,7 @@ Se usan entre 3 y 6 topics. No se agregan topics de clientes cuando ello revele 
 
 ## 7. Ramas, ambientes y pull requests
 
-Todo repositorio activo mantiene estas ramas permanentes:
+Todo repositorio activo mantiene estas ramas permanentes, salvo la excepción indicada en la sección 7.4:
 
 ```text
 feature/* → dev → qa → prod
@@ -177,6 +177,15 @@ Se habilitan estas opciones:
 8. Mantener deshabilitados **Allow force pushes** y **Allow deletions**.
 
 GitHub protege el destino del PR, pero no restringe por sí solo que el origen sea `dev` o `qa`. El pipeline debe validar ese flujo: permitir solo `dev → qa` y `qa → prod`; cualquier otro origen debe fallar la validación.
+
+### 7.4 Excepción para el repositorio `.github`
+
+El repositorio organizacional `.github` contiene estándares, perfiles y configuración compartida de GitHub; no representa una aplicación, servicio, librería ni ambiente desplegable. Por lo tanto, mantiene únicamente la rama permanente `main`.
+
+- `main` es la rama predeterminada y protegida de `.github`.
+- Los cambios se realizan en ramas cortas y se integran mediante pull request hacia `main`.
+- `.github` no requiere las ramas permanentes `dev`, `qa` ni `prod`.
+- Las reglas de despliegue por ambiente no aplican a este repositorio.
 
 ## 8. Issues
 
@@ -255,7 +264,7 @@ No se eliminan labels existentes sin revisar su uso histórico y acordar la migr
 - [ ] Existe una descripción y entre 3 y 6 topics pertinentes.
 - [ ] El README permite entender, instalar y probar el proyecto.
 - [ ] Se configuraron `.gitignore`, `.editorconfig` y CI cuando corresponda.
-- [ ] `dev`, `qa` y `prod` están protegidas, y `dev` está configurada como rama predeterminada.
+- [ ] En repositorios con flujo por ambientes, `dev`, `qa` y `prod` están protegidas, y `dev` está configurada como rama predeterminada; en `.github`, solo `main` está protegida y configurada como rama predeterminada.
 - [ ] Se creó el catálogo obligatorio de labels.
 - [ ] Hay más de una persona o equipo responsable del repositorio.
 - [ ] Los secretos y datos de clientes no están versionados.
