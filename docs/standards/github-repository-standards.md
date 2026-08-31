@@ -33,23 +33,33 @@ Las reglas obligatorias aplican a repositorios nuevos y a cambios estructurales 
 | --- | --- | --- |
 | Solución de cliente | `<cliente>-<producto>` | `bhp-imp` |
 | Plataforma o producto interno | `<producto>` | `dataset` |
-| Librería compartida | `<capacidad>` | `dateutils` |
+| Librería compartida | `<capacidad>-library` | `geometry-library` |
 | Plantilla | `template-<tecnología>` | `template-dotnet` |
 | Herramienta interna | `<capacidad>-tool` | `repository-tool` |
 | Configuración organizacional | nombre reservado | `.github` |
 
 Si un producto incluye varios repositorios, se conserva un prefijo común: `bhp-imp-api`, `bhp-imp-collector` y `bhp-imp-web`.
 
-### 3.3 Tipo de repositorio y sufijos opcionales
+### 3.3 Tecnología y tipo de repositorio
 
-Todo repositorio declara un tipo principal en su descripción de GitHub, topics y README. El tipo no es obligatorio en el nombre, pero puede incorporarse como sufijo o patrón cuando evita ambigüedad entre repositorios de un mismo producto o dominio.
+La organización puede mantener repositorios escritos en **C#** y **TypeScript**. Todo repositorio declara su tecnología principal, tipo y propósito en la descripción de GitHub y en el README. La tecnología no reemplaza al tipo: por ejemplo, un repositorio puede ser una `api` de C# o una `api` de TypeScript.
+
+En repositorios C#, el tipo `library` se reserva para proyectos que generan paquetes NuGet reutilizables por otros proyectos C#. Estos repositorios deben usar el sufijo `-library`, por ejemplo `geometry-library`.
+
+En repositorios TypeScript, el tipo `package` se reserva para proyectos que generan paquetes reutilizables, normalmente publicados o consumidos mediante npm. Estos repositorios deben usar el sufijo `-package`, por ejemplo `geometry-package`.
 
 | Tipo | Propósito | Sufijo o patrón permitido | Ejemplo |
 | --- | --- | --- | --- |
-| `library` | Librería reutilizable, interna o publicada como NuGet. | `-library` solo si es necesario distinguirla. | `imp-client-library` |
+| `library` | Proyecto C# que genera un paquete NuGet reutilizable por otros proyectos C#. | `-library` obligatorio. | `geometry-library` |
+| `package` | Proyecto TypeScript que genera un paquete reutilizable, normalmente para npm. | `-package` obligatorio. | `geometry-package` |
+| `console` | Aplicación de consola desarrollada en C#. | `-console` | `data-import-console` |
 | `api` | Backend expuesto mediante HTTP. | `-api` | `imp-api` |
 | `service` | Worker o proceso backend sin API pública principal. | `-service` | `imp-notification-service` |
+| `deliverer` | Proceso que entrega o publica datos, resultados o mensajes hacia un destino. | `-deliverer` | `report-deliverer` |
+| `helper` | Herramienta o componente de apoyo para una tarea específica. | `-helper` | `migration-helper` |
+| `agent` | Proceso automatizado que ejecuta tareas o interactúa con otros sistemas. | `-agent` | `monitoring-agent` |
 | `collector` | Captura e ingesta datos desde fuentes externas. | `-collector` | `spence-collector` |
+| `crafter` | Proceso que construye, transforma o genera artefactos, datos o contenido. | `-crafter` | `schema-crafter` |
 | `web` | Aplicación frontend. | `-web` | `imp-web` |
 | `application` | Aplicación de escritorio o ejecutable para usuarios. | `-app` | `imp-app` |
 | `infrastructure` | Infraestructura, CI/CD o configuración de despliegue. | `-infra` | `imp-infra` |
@@ -59,11 +69,11 @@ Todo repositorio declara un tipo principal en su descripción de GitHub, topics 
 
 Reglas:
 
-- No se agregan sufijos redundantes: `imp-backend-api` y `dataset-nuget-library` no son válidos.
-- Una librería compartida normalmente omite `-library`: `dataset` y `dateutils` son nombres correctos.
-- Si un producto tiene varias partes, el sufijo es recomendable: `imp-api`, `imp-web` e `imp-collector`.
-- `Model`, `Helper`, `Crafter`, `Deliver` y `Agent` son tipos de componentes o proyectos dentro de una solución; no se usan como sufijos de repositorio.
-- El tipo define requisitos adicionales de documentación y pipeline. Una `library` publica paquetes y verifica compatibilidad; una `api`, `service`, `collector`, `web` o `application` debe definir su despliegue y monitoreo.
+- El nombre de los repositorios de tipo `library`, `package`, `console`, `api`, `service`, `deliverer`, `helper`, `agent`, `collector`, `crafter` y `web` debe incluir el sufijo correspondiente, salvo que exista una excepción aprobada para un repositorio legado.
+- No se agregan sufijos redundantes ni se combinan tipos sin justificación: `imp-backend-api` y `dataset-nuget-library` no son válidos.
+- Si un producto tiene varias partes, se conserva un prefijo común: `imp-api`, `imp-web` e `imp-collector`.
+- `Model` no es un tipo de repositorio aprobado; es un componente o proyecto dentro de una solución.
+- El tipo define requisitos adicionales de documentación y pipeline. Una `library` publica paquetes NuGet y una `package` publica paquetes TypeScript; una `api`, `service`, `deliverer`, `agent`, `collector`, `crafter`, `web` o `console` debe definir su ejecución, despliegue y monitoreo cuando corresponda.
 
 ## 4. Propiedad, visibilidad y ciclo de vida
 
