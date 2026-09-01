@@ -22,11 +22,6 @@ Este estándar define cómo crear, nombrar, documentar y mantener los repositori
 
 - Los nombres usan **kebab-case**, solo con letras minúsculas, números y guiones.
 - Los repositorios deben terminar con un sufijo permitido y el sufijo es obligatorio, salvo las excepciones de nombres reservados como `.github`.
-- No se usan espacios, mayúsculas, guiones bajos, fechas, versiones, nombres de personas ni nombres ambiguos como `test`, `nuevo` o `final`.
-- El nombre describe el producto o responsabilidad; no la tecnología, salvo en plantillas o herramientas técnicas donde sea necesaria para distinguirlo.
-- Los repositorios existentes como `dataset`, `dateutils` y `component` no requieren renombrarse. Esta regla guía los nuevos repositorios.
-
-Los sufijos permitidos son: `-library`, `-package`, `-console`, `-api`, `-service`, `-model`, `-deliverer`, `-helper`, `-agent`, `-collector`, `-crafter`, `-web`, `-app`, `-infra`, `-tool`, `-template` y `-docs`.
 
 ### 3.2 Patrones aprobados
 
