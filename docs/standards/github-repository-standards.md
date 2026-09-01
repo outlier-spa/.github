@@ -30,26 +30,21 @@ Este estándar define cómo crear, nombrar, documentar y mantener los repositori
 | Repositorio aplicado a un dominio | `<tipo>-<dominio>` | `collector-spence` |
 | Repositorio aplicado a un dominio con componente | `<tipo>-<dominio>-<componente>` | `collector-spence-blockmodel` |
 | Repositorio general | `<proyecto>-<tipo>` | `dataset-service` |
-| Plantilla | `<proyecto>-template` | `dotnet-template` |
-| Herramienta interna | `<proyecto>-tool` | `repository-tool` |
 | Configuración organizacional | nombre reservado | `.github` |
 
 En repositorios aplicados a un dominio, el tipo funciona como prefijo y el dominio identifica el contexto funcional. El componente es opcional y se agrega solo cuando el repositorio representa una parte específica del dominio.
-
-Si un dominio incluye varios repositorios, se conserva el mismo dominio: `collector-spence`, `helper-spence` y `agent-spence`.
 
 ### 3.3 Tecnología y tipo de repositorio
 
 La organización puede mantener repositorios escritos en **C#** y **TypeScript**. Todo repositorio declara su tecnología principal, tipo y propósito en la descripción de GitHub y en el README. La tecnología no reemplaza al tipo: por ejemplo, un repositorio puede ser una `api` de C# o una `api` de TypeScript.
 
-En repositorios C#, el tipo `library` se reserva para proyectos que generan paquetes NuGet reutilizables por otros proyectos C#. En repositorios generales se usa el patrón `<proyecto>-library`, por ejemplo `dataset-library`.
+### 3.3.1 Repositorios C#
 
-En repositorios TypeScript, el tipo `package` se reserva para proyectos que generan paquetes reutilizables, normalmente publicados o consumidos mediante npm. En repositorios generales se usa el patrón `<proyecto>-package`, por ejemplo `visualizer-package`.
+En repositorios C#, el tipo `library` se reserva para proyectos que generan paquetes NuGet reutilizables por otros proyectos C#. Los repositorios generales usan `<proyecto>-<tipo>` y los repositorios aplicados a un dominio usan `<tipo>-<dominio>` o `<tipo>-<dominio>-<componente>`.
 
 | Tipo | Propósito | Patrón aplicable | Ejemplo |
 | --- | --- | --- | --- |
 | `library` | Proyecto C# que genera un paquete NuGet reutilizable por otros proyectos C#. | `<proyecto>-library` o `library-<dominio>` | `dataset-library` |
-| `package` | Proyecto TypeScript que genera un paquete reutilizable, normalmente para npm. | `<proyecto>-package` o `package-<dominio>` | `visualizer-package` |
 | `console` | Aplicación de consola desarrollada en C#. | `<proyecto>-console` o `console-<dominio>` | `data-import-console` |
 | `api` | Backend expuesto mediante HTTP. | `<proyecto>-api` o `api-<dominio>` | `imp-api` |
 | `service` | Worker o proceso backend sin API pública principal. | `<proyecto>-service` o `service-<dominio>` | `dataset-service` |
@@ -59,19 +54,22 @@ En repositorios TypeScript, el tipo `package` se reserva para proyectos que gene
 | `agent` | Proceso automatizado que ejecuta tareas o interactúa con otros sistemas. | `<proyecto>-agent` o `agent-<dominio>` | `agent-spence` |
 | `collector` | Captura e ingesta datos desde fuentes externas. | `<proyecto>-collector` o `collector-<dominio>` | `collector-spence` |
 | `crafter` | Proceso que construye, transforma o genera artefactos, datos o contenido. | `<proyecto>-crafter` o `crafter-<dominio>` | `crafter-spence` |
-| `web` | Aplicación frontend. | `<proyecto>-web` o `web-<dominio>` | `imp-web` |
-| `application` | Aplicación de escritorio o ejecutable para usuarios. | `<proyecto>-app` o `app-<dominio>` | `imp-app` |
-| `infrastructure` | Infraestructura, CI/CD o configuración de despliegue. | `<proyecto>-infra` o `infra-<dominio>` | `imp-infra` |
-| `tool` | Herramienta interna de soporte o automatización. | `<proyecto>-tool` o `tool-<dominio>` | `repository-tool` |
-| `template` | Base reutilizable para crear repositorios. | `<proyecto>-template` | `dotnet-template` |
-| `documentation` | Documentación o estándares organizacionales. | `<proyecto>-docs` | `platform-docs` |
+
+### 3.3.2 Repositorios TypeScript
+
+En repositorios TypeScript, el tipo `package` se reserva para proyectos que generan paquetes reutilizables, normalmente publicados o consumidos mediante npm. Los repositorios generales usan `<proyecto>-<tipo>` y los repositorios aplicados a un dominio usan `<tipo>-<dominio>` o `<tipo>-<dominio>-<componente>`.
+
+| Tipo | Propósito | Patrón aplicable | Ejemplo |
+| --- | --- | --- | --- |
+| `package` | Proyecto TypeScript que genera un paquete reutilizable, normalmente para npm. | `<proyecto>-package` o `package-<dominio>` | `visualizer-package` |
+| `component` | Proyecto TypeScript que genera componentes reutilizables para otros proyectos. | `<proyecto>-component` o `component-<dominio>` | `visualizer-component` |
 
 Reglas:
 
 - El tipo es obligatorio y debe aparecer como prefijo en repositorios aplicados a un dominio, o como sufijo en repositorios generales.
 - No se agregan tipos redundantes ni se combinan tipos sin justificación.
 - En repositorios aplicados a un dominio, el componente es opcional y debe describir una parte concreta del dominio.
-- El tipo define requisitos adicionales de documentación y pipeline. Una `library` publica paquetes NuGet y una `package` publica paquetes TypeScript; una `api`, `service`, `deliverer`, `agent`, `collector`, `crafter`, `web` o `console` debe definir su ejecución, despliegue y monitoreo cuando corresponda.
+- El tipo define requisitos adicionales de documentación y pipeline. Una `library` publica paquetes NuGet y una `package` publica paquetes TypeScript; los demás tipos deben definir su ejecución, despliegue y monitoreo cuando corresponda.
 
 ## 4. Propiedad, visibilidad y ciclo de vida
 
