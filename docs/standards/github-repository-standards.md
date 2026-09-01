@@ -27,11 +27,11 @@ Este estándar define cómo crear, nombrar, documentar y mantener los repositori
 
 | Tipo | Patrón | Ejemplo |
 | --- | --- | --- |
-| Solución de cliente | `<cliente>-<producto>-<tipo>` | `bhp-imp-api` |
-| Plataforma o producto interno | `<producto>-<tipo>` | `dataset-service` |
-| Librería compartida | `<capacidad>-library` | `geometry-library` |
-| Plantilla | `<tecnología>-template` | `dotnet-template` |
-| Herramienta interna | `<capacidad>-tool` | `repository-tool` |
+| Solución de cliente | `<proyecto>-<sufijo>` | `bhp-imp-api` |
+| Plataforma o producto interno | `<proyecto>-<sufijo>` | `dataset-service` |
+| Librería compartida | `<proyecto>-<sufijo>` | `geometry-library` |
+| Plantilla | `<proyecto>-<sufijo>` | `dotnet-template` |
+| Herramienta interna | `<proyecto>-<sufijo>` | `repository-tool` |
 | Configuración organizacional | nombre reservado | `.github` |
 
 Si un producto incluye varios repositorios, se conserva un prefijo común: `bhp-imp-api`, `bhp-imp-collector` y `bhp-imp-web`.
