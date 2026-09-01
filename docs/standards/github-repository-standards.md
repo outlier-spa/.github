@@ -21,54 +21,56 @@ Este estándar define cómo crear, nombrar, documentar y mantener los repositori
 ### 3.1 Regla general
 
 - Los nombres usan **kebab-case**, solo con letras minúsculas, números y guiones.
-- Los repositorios deben terminar con un sufijo permitido y el sufijo es obligatorio, salvo las excepciones de nombres reservados como `.github`.
+- Todo repositorio debe identificar su tipo y seguir uno de los patrones aprobados, salvo las excepciones de nombres reservados como `.github`.
 
 ### 3.2 Patrones aprobados
 
-| Tipo | Patrón | Ejemplo |
+| Categoría | Patrón | Ejemplo |
 | --- | --- | --- |
-| Solución de cliente | `<proyecto>-<sufijo>` | `bhp-imp-api` |
-| Plataforma o producto interno | `<proyecto>-<sufijo>` | `dataset-service` |
-| Librería compartida | `<proyecto>-<sufijo>` | `geometry-library` |
-| Plantilla | `<proyecto>-<sufijo>` | `dotnet-template` |
-| Herramienta interna | `<proyecto>-<sufijo>` | `repository-tool` |
+| Repositorio aplicado a un dominio | `<tipo>-<dominio>` | `collector-spence` |
+| Repositorio aplicado a un dominio con componente | `<tipo>-<dominio>-<componente>` | `collector-spence-blockmodel` |
+| Repositorio general | `<proyecto>-<tipo>` | `dataset-service` |
+| Plantilla | `<proyecto>-template` | `dotnet-template` |
+| Herramienta interna | `<proyecto>-tool` | `repository-tool` |
 | Configuración organizacional | nombre reservado | `.github` |
 
-Si un producto incluye varios repositorios, se conserva un prefijo común: `bhp-imp-api`, `bhp-imp-collector` y `bhp-imp-web`.
+En repositorios aplicados a un dominio, el tipo funciona como prefijo y el dominio identifica el contexto funcional. El componente es opcional y se agrega solo cuando el repositorio representa una parte específica del dominio.
+
+Si un dominio incluye varios repositorios, se conserva el mismo dominio: `collector-spence`, `helper-spence` y `agent-spence`.
 
 ### 3.3 Tecnología y tipo de repositorio
 
 La organización puede mantener repositorios escritos en **C#** y **TypeScript**. Todo repositorio declara su tecnología principal, tipo y propósito en la descripción de GitHub y en el README. La tecnología no reemplaza al tipo: por ejemplo, un repositorio puede ser una `api` de C# o una `api` de TypeScript.
 
-En repositorios C#, el tipo `library` se reserva para proyectos que generan paquetes NuGet reutilizables por otros proyectos C#. Estos repositorios deben usar el sufijo `-library`, por ejemplo `geometry-library`.
+En repositorios C#, el tipo `library` se reserva para proyectos que generan paquetes NuGet reutilizables por otros proyectos C#. En repositorios generales se usa el patrón `<proyecto>-library`, por ejemplo `dataset-library`.
 
-En repositorios TypeScript, el tipo `package` se reserva para proyectos que generan paquetes reutilizables, normalmente publicados o consumidos mediante npm. Estos repositorios deben usar el sufijo `-package`, por ejemplo `geometry-package`.
+En repositorios TypeScript, el tipo `package` se reserva para proyectos que generan paquetes reutilizables, normalmente publicados o consumidos mediante npm. En repositorios generales se usa el patrón `<proyecto>-package`, por ejemplo `visualizer-package`.
 
-| Tipo | Propósito | Sufijo o patrón permitido | Ejemplo |
+| Tipo | Propósito | Patrón aplicable | Ejemplo |
 | --- | --- | --- | --- |
-| `library` | Proyecto C# que genera un paquete NuGet reutilizable por otros proyectos C#. | `-library` obligatorio. | `geometry-library` |
-| `package` | Proyecto TypeScript que genera un paquete reutilizable, normalmente para npm. | `-package` obligatorio. | `geometry-package` |
-| `console` | Aplicación de consola desarrollada en C#. | `-console` | `data-import-console` |
-| `api` | Backend expuesto mediante HTTP. | `-api` | `imp-api` |
-| `service` | Worker o proceso backend sin API pública principal. | `-service` | `imp-notification-service` |
-| `model` | Proyecto que contiene modelos, contratos o estructuras de datos compartidas. | `-model` | `geometry-model` |
-| `deliverer` | Proceso que entrega o publica datos, resultados o mensajes hacia un destino. | `-deliverer` | `report-deliverer` |
-| `helper` | Herramienta o componente de apoyo para una tarea específica. | `-helper` | `migration-helper` |
-| `agent` | Proceso automatizado que ejecuta tareas o interactúa con otros sistemas. | `-agent` | `monitoring-agent` |
-| `collector` | Captura e ingesta datos desde fuentes externas. | `-collector` | `spence-collector` |
-| `crafter` | Proceso que construye, transforma o genera artefactos, datos o contenido. | `-crafter` | `schema-crafter` |
-| `web` | Aplicación frontend. | `-web` | `imp-web` |
-| `application` | Aplicación de escritorio o ejecutable para usuarios. | `-app` | `imp-app` |
-| `infrastructure` | Infraestructura, CI/CD o configuración de despliegue. | `-infra` | `imp-infra` |
-| `tool` | Herramienta interna de soporte o automatización. | `-tool` | `repository-tool` |
-| `template` | Base reutilizable para crear repositorios. | `-template` | `dotnet-template` |
-| `documentation` | Documentación o estándares organizacionales. | `-docs` | `platform-docs` |
+| `library` | Proyecto C# que genera un paquete NuGet reutilizable por otros proyectos C#. | `<proyecto>-library` o `library-<dominio>` | `dataset-library` |
+| `package` | Proyecto TypeScript que genera un paquete reutilizable, normalmente para npm. | `<proyecto>-package` o `package-<dominio>` | `visualizer-package` |
+| `console` | Aplicación de consola desarrollada en C#. | `<proyecto>-console` o `console-<dominio>` | `data-import-console` |
+| `api` | Backend expuesto mediante HTTP. | `<proyecto>-api` o `api-<dominio>` | `imp-api` |
+| `service` | Worker o proceso backend sin API pública principal. | `<proyecto>-service` o `service-<dominio>` | `dataset-service` |
+| `model` | Proyecto que contiene modelos, contratos o estructuras de datos compartidas. | `<proyecto>-model` o `model-<dominio>` | `geometry-model` |
+| `deliverer` | Proceso que entrega o publica datos, resultados o mensajes hacia un destino. | `<proyecto>-deliverer` o `deliverer-<dominio>` | `report-deliverer` |
+| `helper` | Herramienta o componente de apoyo para una tarea específica. | `<proyecto>-helper` o `helper-<dominio>` | `helper-spence` |
+| `agent` | Proceso automatizado que ejecuta tareas o interactúa con otros sistemas. | `<proyecto>-agent` o `agent-<dominio>` | `agent-spence` |
+| `collector` | Captura e ingesta datos desde fuentes externas. | `<proyecto>-collector` o `collector-<dominio>` | `collector-spence` |
+| `crafter` | Proceso que construye, transforma o genera artefactos, datos o contenido. | `<proyecto>-crafter` o `crafter-<dominio>` | `crafter-spence` |
+| `web` | Aplicación frontend. | `<proyecto>-web` o `web-<dominio>` | `imp-web` |
+| `application` | Aplicación de escritorio o ejecutable para usuarios. | `<proyecto>-app` o `app-<dominio>` | `imp-app` |
+| `infrastructure` | Infraestructura, CI/CD o configuración de despliegue. | `<proyecto>-infra` o `infra-<dominio>` | `imp-infra` |
+| `tool` | Herramienta interna de soporte o automatización. | `<proyecto>-tool` o `tool-<dominio>` | `repository-tool` |
+| `template` | Base reutilizable para crear repositorios. | `<proyecto>-template` | `dotnet-template` |
+| `documentation` | Documentación o estándares organizacionales. | `<proyecto>-docs` | `platform-docs` |
 
 Reglas:
 
-- El nombre de todo repositorio debe incluir uno de los sufijos permitidos, salvo que exista una excepción aprobada para un repositorio legado o que use un nombre reservado como `.github`.
-- No se agregan sufijos redundantes ni se combinan tipos sin justificación: `imp-backend-api` y `dataset-nuget-library` no son válidos.
-- Si un producto tiene varias partes, se conserva un prefijo común: `imp-api`, `imp-web` e `imp-collector`.
+- El tipo es obligatorio y debe aparecer como prefijo en repositorios aplicados a un dominio, o como sufijo en repositorios generales.
+- No se agregan tipos redundantes ni se combinan tipos sin justificación.
+- En repositorios aplicados a un dominio, el componente es opcional y debe describir una parte concreta del dominio.
 - El tipo define requisitos adicionales de documentación y pipeline. Una `library` publica paquetes NuGet y una `package` publica paquetes TypeScript; una `api`, `service`, `deliverer`, `agent`, `collector`, `crafter`, `web` o `console` debe definir su ejecución, despliegue y monitoreo cuando corresponda.
 
 ## 4. Propiedad, visibilidad y ciclo de vida
