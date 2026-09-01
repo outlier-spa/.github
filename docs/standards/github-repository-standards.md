@@ -8,8 +8,6 @@
 
 Este estándar define cómo crear, nombrar, documentar y mantener los repositorios de Outlier. Su objetivo es que una persona pueda identificar el propósito, responsable, tecnología y estado operativo de un repositorio sin depender del conocimiento de quien lo creó.
 
-Las reglas obligatorias aplican a repositorios nuevos y a cambios estructurales relevantes. Los repositorios existentes se alinean de forma gradual; no se renombran ni se reestructuran solo por cumplir esta norma.
-
 ## 2. Principios
 
 1. Un repositorio representa una unidad clara de producto, servicio, librería, plantilla o configuración organizacional.
@@ -22,19 +20,22 @@ Las reglas obligatorias aplican a repositorios nuevos y a cambios estructurales 
 
 ### 3.1 Regla general
 
-- Se usa **kebab-case**, solo con letras minúsculas, números y guiones: `bhp-imp`, `template-dotnet`.
+- Los nombres usan **kebab-case**, solo con letras minúsculas, números y guiones.
+- Los repositorios deben terminar con un sufijo permitido y el sufijo es obligatorio, salvo las excepciones de nombres reservados como `.github`.
 - No se usan espacios, mayúsculas, guiones bajos, fechas, versiones, nombres de personas ni nombres ambiguos como `test`, `nuevo` o `final`.
 - El nombre describe el producto o responsabilidad; no la tecnología, salvo en plantillas o herramientas técnicas donde sea necesaria para distinguirlo.
 - Los repositorios existentes como `dataset`, `dateutils` y `component` no requieren renombrarse. Esta regla guía los nuevos repositorios.
+
+Los sufijos permitidos son: `-library`, `-package`, `-console`, `-api`, `-service`, `-model`, `-deliverer`, `-helper`, `-agent`, `-collector`, `-crafter`, `-web`, `-app`, `-infra`, `-tool`, `-template` y `-docs`.
 
 ### 3.2 Patrones aprobados
 
 | Tipo | Patrón | Ejemplo |
 | --- | --- | --- |
-| Solución de cliente | `<cliente>-<producto>` | `bhp-imp` |
-| Plataforma o producto interno | `<producto>` | `dataset` |
+| Solución de cliente | `<cliente>-<producto>-<tipo>` | `bhp-imp-api` |
+| Plataforma o producto interno | `<producto>-<tipo>` | `dataset-service` |
 | Librería compartida | `<capacidad>-library` | `geometry-library` |
-| Plantilla | `template-<tecnología>` | `template-dotnet` |
+| Plantilla | `<tecnología>-template` | `dotnet-template` |
 | Herramienta interna | `<capacidad>-tool` | `repository-tool` |
 | Configuración organizacional | nombre reservado | `.github` |
 
@@ -55,6 +56,7 @@ En repositorios TypeScript, el tipo `package` se reserva para proyectos que gene
 | `console` | Aplicación de consola desarrollada en C#. | `-console` | `data-import-console` |
 | `api` | Backend expuesto mediante HTTP. | `-api` | `imp-api` |
 | `service` | Worker o proceso backend sin API pública principal. | `-service` | `imp-notification-service` |
+| `model` | Proyecto que contiene modelos, contratos o estructuras de datos compartidas. | `-model` | `geometry-model` |
 | `deliverer` | Proceso que entrega o publica datos, resultados o mensajes hacia un destino. | `-deliverer` | `report-deliverer` |
 | `helper` | Herramienta o componente de apoyo para una tarea específica. | `-helper` | `migration-helper` |
 | `agent` | Proceso automatizado que ejecuta tareas o interactúa con otros sistemas. | `-agent` | `monitoring-agent` |
@@ -64,15 +66,14 @@ En repositorios TypeScript, el tipo `package` se reserva para proyectos que gene
 | `application` | Aplicación de escritorio o ejecutable para usuarios. | `-app` | `imp-app` |
 | `infrastructure` | Infraestructura, CI/CD o configuración de despliegue. | `-infra` | `imp-infra` |
 | `tool` | Herramienta interna de soporte o automatización. | `-tool` | `repository-tool` |
-| `template` | Base reutilizable para crear repositorios. | `template-<tecnología>` | `template-dotnet` |
-| `documentation` | Documentación o estándares organizacionales. | `docs-<dominio>` cuando aporte claridad. | `docs-platform` |
+| `template` | Base reutilizable para crear repositorios. | `-template` | `dotnet-template` |
+| `documentation` | Documentación o estándares organizacionales. | `-docs` | `platform-docs` |
 
 Reglas:
 
-- El nombre de los repositorios de tipo `library`, `package`, `console`, `api`, `service`, `deliverer`, `helper`, `agent`, `collector`, `crafter` y `web` debe incluir el sufijo correspondiente, salvo que exista una excepción aprobada para un repositorio legado.
+- El nombre de todo repositorio debe incluir uno de los sufijos permitidos, salvo que exista una excepción aprobada para un repositorio legado o que use un nombre reservado como `.github`.
 - No se agregan sufijos redundantes ni se combinan tipos sin justificación: `imp-backend-api` y `dataset-nuget-library` no son válidos.
 - Si un producto tiene varias partes, se conserva un prefijo común: `imp-api`, `imp-web` e `imp-collector`.
-- `Model` no es un tipo de repositorio aprobado; es un componente o proyecto dentro de una solución.
 - El tipo define requisitos adicionales de documentación y pipeline. Una `library` publica paquetes NuGet y una `package` publica paquetes TypeScript; una `api`, `service`, `deliverer`, `agent`, `collector`, `crafter`, `web` o `console` debe definir su ejecución, despliegue y monitoreo cuando corresponda.
 
 ## 4. Propiedad, visibilidad y ciclo de vida
