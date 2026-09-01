@@ -1,0 +1,77 @@
+name: Task
+description: Registrar una tarea tecnica, operativa o de documentacion.
+title: "[Task] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Usa esta plantilla para trabajo interno que no sea necesariamente bug ni nueva funcionalidad.
+
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objetivo
+      description: Que se debe lograr.
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Alcance
+      description: Que incluye y que no incluye esta tarea.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Tipo de tarea
+      options:
+        - docs
+        - chore
+        - infra
+        - qa
+        - support
+        - data
+        - automation
+        - other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Prioridad
+      options:
+        - p0-critical
+        - p1-high
+        - p2-medium
+        - p3-low
+    validations:
+      required: true
+
+  - type: textarea
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Lista de pasos o subtareas.
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: done
+    attributes:
+      label: Criterio de cierre
+      description: Que debe cumplirse para cerrar esta tarea.
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notas adicionales

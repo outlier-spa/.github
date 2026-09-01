@@ -1,0 +1,9 @@
+# CODEOWNERS para outlier-spa/.github
+#
+# Este archivo queda como plantilla segura. No define propietarios activos
+# porque primero se deben confirmar los equipos reales de la organizacion.
+#
+# Ejemplo cuando existan los equipos:
+# * @outlier-spa/maintainers-platform
+# .github/ISSUE_TEMPLATE/ @outlier-spa/maintainers-platform
+# SECURITY.md @outlier-spa/security

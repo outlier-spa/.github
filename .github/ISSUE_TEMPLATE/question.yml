@@ -1,0 +1,54 @@
+name: Pregunta o definicion
+description: Registrar una duda, decision pendiente o analisis requerido.
+title: "[Question] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Usa esta plantilla cuando aun no este claro si el trabajo es bug, feature o tarea.
+  - type: textarea
+    id: question
+    attributes:
+      label: Pregunta o definicion requerida
+      description: Explica que se necesita decidir o aclarar.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Contexto
+      description: Producto, modulo, repositorio, usuario o situacion relacionada.
+    validations:
+      required: true
+  - type: textarea
+    id: options
+    attributes:
+      label: Opciones consideradas
+      description: Si ya existen alternativas, listalas aqui.
+      placeholder: |
+        - Opcion A: ...
+        - Opcion B: ...
+  - type: textarea
+    id: decision_criteria
+    attributes:
+      label: Criterios para decidir
+      description: Que datos o restricciones deben considerarse.
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Prioridad
+      options:
+        - p0-critical
+        - p1-high
+        - p2-medium
+        - p3-low
+    validations:
+      required: true
+  - type: textarea
+    id: next_steps
+    attributes:
+      label: Proximos pasos sugeridos
+      placeholder: |
+        - [ ] Revisar ...
+        - [ ] Confirmar ...
+        - [ ] Convertir en issue de trabajo si corresponde.

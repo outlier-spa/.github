@@ -1,0 +1,97 @@
+name: Feature
+description: Solicitar una nueva funcionalidad o mejora relevante.
+title: "[Feature] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Usa esta plantilla para nuevas funcionalidades, mejoras de producto o cambios que agreguen valor funcional.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema u oportunidad
+      description: Que necesidad resuelve esta funcionalidad.
+      placeholder: Ejemplo: Los usuarios no pueden filtrar reportes por turno.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Propuesta
+      description: Describe la solucion esperada.
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Alcance
+      description: Que incluye y que no incluye esta solicitud.
+      placeholder: |
+        Incluye:
+        - ...
+
+        No incluye:
+        - ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Prioridad
+      options:
+        - p0-critical
+        - p1-high
+        - p2-medium
+        - p3-low
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area principal
+      multiple: true
+      options:
+        - frontend
+        - backend
+        - database
+        - collector
+        - mobile
+        - infra
+        - design
+        - docs
+        - 3d
+        - qa
+        - security
+        - ai
+        - other
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Criterios de aceptacion
+      description: Como sabremos que esta funcionalidad esta lista.
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencias
+      description: Datos, permisos, diseno, decisiones, APIs u otros equipos requeridos.
+
+  - type: textarea
+    id: references
+    attributes:
+      label: Referencias
+      description: Links, imagenes, mockups, documentos o issues relacionados.
